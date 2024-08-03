@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +27,7 @@ SECRET_KEY = 'django-insecure-@1$14^6@m3r04m2&9qc_n4ck_94yxgk#ed=tbuqifavo63byt-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [".herokuapp.com", "localhost", "127.0.0.1"]  # new
 
 
 # Application definition
@@ -43,6 +45,8 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",  # new
     "allauth",  # new
     "allauth.account",  # new
+    "debug_toolbar", # new
+
     # Local
     "accounts.apps.AccountsConfig",  # new
     "pages.apps.PagesConfig",  # new
@@ -51,6 +55,7 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+    "django.middleware.cache.UpdateCacheMiddleware", # new
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -59,6 +64,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware", # new
+    "django.middleware.cache.FetchFromCacheMiddleware", # new
 
 ]
 
@@ -174,3 +181,13 @@ DEFAULT_FROM_EMAIL = "admin@djangobookstore.com"  # new
 
 MEDIA_URL = "/media/" # new
 MEDIA_ROOT = BASE_DIR / "media" # new
+
+# django-debug-toolbar
+import socket
+
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS = [ip[:-1] + "1" for ip in ips]
+
+CACHE_MIDDLEWARE_ALIAS = "default"
+CACHE_MIDDLEWARE_SECONDS = 604800
+CACHE_MIDDLEWARE_KEY_PREFIX = ""
